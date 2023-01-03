@@ -1,1 +1,152 @@
-@import './common';
+:root {
+  --main-color: #8dc6f2;
+  --edit: #d4a05ca5;
+  --done: #56b346a0;
+  --delete: #f11e1ea9;
+}
+
+// common styles
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+h1,
+h2,
+p {
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav {
+  margin-bottom: 50px;
+}
+
+.container {
+  width: 1200px;
+  padding-left: 15px;
+  padding-right: 15px;
+  outline: 1px solid green;
+  margin: 0 auto;
+}
+
+.btn {
+  width: 100px;
+  padding: 10px 5px;
+  border: none;
+  border-radius: 10px;
+
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+// nav buttons
+
+.nav__list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav__btn {
+  background-color: var(--main-color);
+  color: #ffffff;
+}
+
+// ToDo input
+
+.todo__title {
+  margin-bottom: 20px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 36px;
+  text-align: center;
+}
+
+.todo__form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 50px;
+  align-items: center;
+}
+
+.todo__field {
+  width: 40%;
+  padding: 15px;
+  border: 1px solid var(--main-color);
+  border-radius: 20px;
+  font-size: 18px;
+  color: var(--main-color);
+
+  &::placeholder {
+    color: #8dc6f29d;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.todo__submit {
+  padding: 15px 10px;
+  background-color: transparent;
+  border: 1px solid var(--main-color);
+
+  font-size: 18px;
+  text-transform: uppercase;
+  color: var(--main-color);
+}
+
+// ToDo list
+
+.todo__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 40%;
+  padding: 15px;
+  border: 1px solid var(--main-color);
+  border-radius: 20px;
+
+  font-size: 18px;
+}
+
+.todo__btn-item {
+  width: 50px;
+  padding: 0px 5px;
+  border: none;
+  border-radius: 10px;
+  background-color: transparent;
+
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  text-transform: lowercase;
+  text-align: center;
+}
+
+// setting colors
+
+.todo__edit {
+  color: var(--edit);
+}
+
+.todo__done {
+  color: var(--done);
+}
+
+.todo__delete {
+  color: var(--delete);
+}

@@ -1,9 +1,10 @@
-:root {
-  --main-color: #8dc6f2;
-  --edit: #d4a05ca5;
-  --done: #56b346a0;
-  --delete: #f11e1ea9;
-}
+$accent: #8dc6f2;
+$text: #ffffff;
+$edit: #d4a05ca5;
+$done: #56b346a0;
+$delete: #f11e1ea9;
+$time: 200ms;
+$cubic: cubic-bezier(0.4, 0, 0.2, 1);
 
 // common styles
 
@@ -33,7 +34,6 @@ nav {
   width: 1200px;
   padding-left: 15px;
   padding-right: 15px;
-  outline: 1px solid green;
   margin: 0 auto;
 }
 
@@ -47,7 +47,7 @@ nav {
   font-weight: 500;
   font-size: 16px;
   text-align: center;
-  color: #ffffff;
+  color: $text;
   cursor: pointer;
 }
 
@@ -61,8 +61,8 @@ nav {
 }
 
 .nav__btn {
-  background-color: var(--main-color);
-  color: #ffffff;
+  background-color: $accent;
+  color: $text;
 }
 
 // ToDo input
@@ -76,19 +76,18 @@ nav {
 
 .todo__form {
   display: flex;
-  justify-content: center;
   gap: 10px;
-  margin-bottom: 50px;
-  align-items: center;
+  width: 50%;
+  margin: 0 auto 50px;
 }
 
 .todo__field {
-  width: 40%;
+  width: calc(100% - 100px);
   padding: 15px;
-  border: 1px solid var(--main-color);
+  border: 1px solid $accent;
   border-radius: 20px;
   font-size: 18px;
-  color: var(--main-color);
+  color: $accent;
 
   &::placeholder {
     color: #8dc6f29d;
@@ -102,26 +101,49 @@ nav {
 .todo__submit {
   padding: 15px 10px;
   background-color: transparent;
-  border: 1px solid var(--main-color);
+  border: 1px solid $accent;
 
   font-size: 18px;
   text-transform: uppercase;
-  color: var(--main-color);
+  color: $accent;
+
+  transition: $time $cubic;
+
+  &:hover {
+    background-color: $accent;
+    color: $text;
+  }
 }
 
 // ToDo list
+
+.todo__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50%;
+  margin: 0 auto;
+}
 
 .todo__item {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  width: 40%;
   padding: 15px;
-  border: 1px solid var(--main-color);
+  border: 1px solid $accent;
   border-radius: 20px;
+}
 
+.todo__input {
+  flex-grow: 1;
+  border: none;
+  font-family: 'Roboto', sans-serif;
   font-size: 18px;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .todo__btn-item {
@@ -140,13 +162,13 @@ nav {
 // setting colors
 
 .todo__edit {
-  color: var(--edit);
+  color: $edit;
 }
 
 .todo__done {
-  color: var(--done);
+  color: $done;
 }
 
 .todo__delete {
-  color: var(--delete);
+  color: $delete;
 }

@@ -133,6 +133,10 @@ nav {
   padding: 15px;
   border: 1px solid $accent;
   border-radius: 20px;
+
+  &-done {
+    border: 3px solid $done;
+  }
 }
 
 .todo__input {

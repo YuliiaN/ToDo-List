@@ -6,6 +6,11 @@ const itemsCollection = [];
 formRef.addEventListener('submit', onFormSubmit);
 refreshPage();
 
+const btnListRef = document.querySelectorAll('.todo__btn-list');
+btnListRef.forEach(buttonItem =>
+  buttonItem.addEventListener('click', onClickAction)
+);
+
 function onFormSubmit(event) {
   event.preventDefault();
 
@@ -54,11 +59,6 @@ function onFormSubmit(event) {
     const index = itemsCollection.indexOf(item);
     localStorage.setItem(`${index}`, item);
   }
-
-  const btnListRef = document.querySelectorAll('.todo__btn-list');
-  btnListRef.forEach(buttonItem =>
-    buttonItem.addEventListener('click', onClickAction)
-  );
 }
 
 function refreshPage() {
@@ -76,7 +76,7 @@ function onClickAction(event) {
   const { target } = event;
   const action = target.dataset.action;
   const parentLi = target.closest('li');
-  const input = parentLi.children[0];
+  //   const input = parentLi.children[0];
   // const inputValue = input.value;
   switch (action) {
     case 'edit':
@@ -100,7 +100,7 @@ function onClickAction(event) {
       // }
       break;
     case 'done':
-      console.log('done');
+      parentLi.classList.toggle('todo__item-done');
       break;
     case 'delete':
       parentLi.remove();

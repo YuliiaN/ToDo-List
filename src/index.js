@@ -1,23 +1,58 @@
-const formRef = document.querySelector('.todo__form');
-const inputRef = document.querySelector('.todo__field');
-const todoListRef = document.querySelector('.todo__list');
-const itemsCollection = [];
+import { Notify } from 'notiflix';
 
-formRef.addEventListener('submit', onFormSubmit);
+const refs = {
+  formRef: document.querySelector('.todo__form'),
+  inputRef: document.querySelector('.todo__field'),
+  todoListRef: document.querySelector('.todo__list'),
+};
+const STORAGE_KEY = 'tasks';
+let itemsCollection = [];
+
+refs.formRef.addEventListener('submit', addTask);
 refreshPage();
 
-const btnListRef = document.querySelectorAll('.todo__btn-list');
-btnListRef.forEach(buttonItem =>
-  buttonItem.addEventListener('click', onClickAction)
-);
+const btnListRef = document.getElementsByClassName('todo__btn-item');
+for (const btnItem of btnListRef) {
+  btnItem.addEventListener('click', onClickAction);
+}
 
-function onFormSubmit(event) {
+function addTask(event) {
   event.preventDefault();
 
-  //create html
+  if (!refs.inputRef.value) {
+    Notify.failure('You cannot add empty field!');
+    return;
+  } else {
+    Notify.success('Your new ToDo has been added!');
 
-  const newItem = `<li class="todo__item">
-            <input value="${inputRef.value}" class="todo__input"></input>
+    const newTask = {
+      id: Date.now(),
+      text: refs.inputRef.value,
+    };
+
+    itemsCollection.push(newTask);
+    saveToLocalStorage();
+    renderTask(newTask);
+    event.currentTarget.reset();
+  }
+}
+
+function refreshPage() {
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    return;
+  } else {
+    itemsCollection = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    itemsCollection.forEach(task => renderTask(task));
+  }
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(itemsCollection));
+}
+
+function renderTask(task) {
+  const item = `<li id="${task.id}" class="todo__item">
+            <input value="${task.text}" class="todo__input"></input>
             <div class="todo__btn-list">
               <button
                 type="button"
@@ -43,41 +78,15 @@ function onFormSubmit(event) {
             </div>
           </li>
     `;
-
-  if (!inputRef.value) {
-    alert('You cannot add empty field!');
-    return;
-  }
-
-  todoListRef.insertAdjacentHTML('beforeend', newItem);
-  itemsCollection.push(newItem);
-  event.currentTarget.reset();
-
-  // local storage
-
-  for (const item of itemsCollection) {
-    const index = itemsCollection.indexOf(item);
-    localStorage.setItem(`${index}`, item);
-  }
-}
-
-function refreshPage() {
-  if (!localStorage.length) {
-    return;
-  }
-
-  for (let i = 0; i < localStorage.length; i++) {
-    itemsCollection.push(localStorage.getItem(i));
-  }
-  todoListRef.insertAdjacentHTML('beforeend', itemsCollection.join(''));
+  refs.todoListRef.insertAdjacentHTML('beforeend', item);
 }
 
 function onClickAction(event) {
   const { target } = event;
   const action = target.dataset.action;
-  const parentLi = target.closest('li');
-  //   const input = parentLi.children[0];
-  // const inputValue = input.value;
+  const item = target.closest('li');
+  const id = +item.id;
+  const input = item.children[0];
   switch (action) {
     case 'edit':
       // if (target.textContent.toLowerCase().trim() === action) {
@@ -100,15 +109,14 @@ function onClickAction(event) {
       // }
       break;
     case 'done':
-      parentLi.classList.toggle('todo__item-done');
+      item.classList.toggle('todo__item-done');
       break;
     case 'delete':
-      parentLi.remove();
-
-      for (const item of itemsCollection) {
-        if (item.includes(input.value)) {
-          localStorage.removeItem(itemsCollection.indexOf(item).toString());
-        }
-      }
+      const index = itemsCollection.findIndex(item => {
+        return item.id === id;
+      });
+      itemsCollection.splice(index, 1);
+      item.remove();
+      saveToLocalStorage();
   }
 }

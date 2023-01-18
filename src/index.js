@@ -23,7 +23,7 @@ function addTask(event) {
     Notify.failure('You cannot add empty field!');
     return;
   } else {
-    Notify.success('Your new ToDo has been added');
+    Notify.success(`Task "${refs.inputRef.value}" has been added`);
 
     const newTask = {
       id: Date.now(),
@@ -100,11 +100,16 @@ function onClickAction(event) {
         target.textContent = 'save';
         target.addEventListener('click', changeName);
 
+        const prev_value = itemObj.text;
+
         function changeName() {
           inputTag.setAttribute('readonly', 'readonly');
           target.textContent = 'edit';
           itemObj.text = inputTag.value;
           itemsCollection.splice(itemInd, 1, itemObj);
+          Notify.info(
+            `Task "${prev_value}" has been changed to "${inputTag.value}"`
+          );
           saveToLocalStorage();
         }
       }
@@ -116,6 +121,7 @@ function onClickAction(event) {
 
       if (itemObj.done === 'todo__item') {
         itemObj.done = `todo__item ${className}`;
+        Notify.success(`Well done! You have completed "${inputTag.value}"`);
       } else {
         itemObj.done = 'todo__item';
       }

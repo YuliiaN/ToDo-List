@@ -53,32 +53,32 @@ function saveToLocalStorage() {
 
 function renderTask(task) {
   const item = `<li id="${task.id}" class="${task.done}">
-            <input value="${task.text}" class="todo__input" readonly></input>
-            <div class="todo__btn-list">
-              <button
-                type="button"
-                data-action="edit"
-                class="todo__btn-item todo__edit"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                data-action="done"
-                class="todo__btn-item todo__done"
-              >
-                Done
-              </button>
-              <button
-                type="button"
-                data-action="delete"
-                class="todo__btn-item todo__delete"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-    `;
+              <input value="${task.text}" class="todo__input" readonly></input>
+              <div class="todo__btn-list">
+                <button
+                  type="button"
+                  data-action="edit"
+                  class="todo__btn-item todo__edit"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  data-action="done"
+                  class="todo__btn-item todo__done"
+                >
+                  Done
+                </button>
+                <button
+                  type="button"
+                  data-action="delete"
+                  class="todo__btn-item todo__delete"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+      `;
   refs.todoListRef.insertAdjacentHTML('beforeend', item);
 }
 

@@ -23,11 +23,12 @@ function addTask(event) {
     Notify.failure('You cannot add empty field!');
     return;
   } else {
-    Notify.success('Your new ToDo has been added!');
+    Notify.success('Your new ToDo has been added');
 
     const newTask = {
       id: Date.now(),
       text: refs.inputRef.value,
+      done: 'todo__item',
     };
 
     itemsCollection.push(newTask);
@@ -51,7 +52,7 @@ function saveToLocalStorage() {
 }
 
 function renderTask(task) {
-  const item = `<li id="${task.id}" class="todo__item">
+  const item = `<li id="${task.id}" class="${task.done}">
             <input value="${task.text}" class="todo__input"></input>
             <div class="todo__btn-list">
               <button
@@ -109,14 +110,26 @@ function onClickAction(event) {
       // }
       break;
     case 'done':
-      item.classList.toggle('todo__item-done');
+      const className = 'todo__item-done';
+      item.classList.toggle(className);
+
+      const itemInd = itemsCollection.findIndex(elem => elem.id === id);
+      const itemObj = itemsCollection[itemInd];
+
+      if (itemObj.done === 'todo__item') {
+        itemObj.done = `todo__item ${className}`;
+      } else {
+        itemObj.done = 'todo__item';
+      }
+
+      itemsCollection.splice(itemInd, 1, itemObj);
+      saveToLocalStorage();
       break;
     case 'delete':
-      const index = itemsCollection.findIndex(item => {
-        return item.id === id;
-      });
+      const index = itemsCollection.findIndex(item => item.id === id);
       itemsCollection.splice(index, 1);
       item.remove();
+      Notify.success(`Task "${input.value}" has been deleted`);
       saveToLocalStorage();
   }
 }

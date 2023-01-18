@@ -53,7 +53,7 @@ function saveToLocalStorage() {
 
 function renderTask(task) {
   const item = `<li id="${task.id}" class="${task.done}">
-            <input value="${task.text}" class="todo__input"></input>
+            <input value="${task.text}" class="todo__input" readonly></input>
             <div class="todo__btn-list">
               <button
                 type="button"
@@ -85,36 +85,34 @@ function renderTask(task) {
 function onClickAction(event) {
   const { target } = event;
   const action = target.dataset.action;
-  const item = target.closest('li');
-  const id = +item.id;
-  const input = item.children[0];
+  const itemTag = target.closest('li');
+  const itemID = +itemTag.id;
+  const inputTag = itemTag.children[0];
+  const itemInd = itemsCollection.findIndex(elem => elem.id === itemID);
+  const itemObj = itemsCollection[itemInd];
+
   switch (action) {
     case 'edit':
-      // if (target.textContent.toLowerCase().trim() === action) {
-      //   input.removeAttribute('readonly');
-      //   input.focus();
-      //   input.selectionStart = input.value.length;
-      //   target.textContent = 'save';
-      //   inputRef.value = input.value;
-      //   // for (const item of itemsCollection) {
-      //   //   if (item.includes(input.value)) {
-      //   //     localStorage.setItem(
-      //   //       itemsCollection.indexOf(item).toString(),
-      //   //       parentLi.innerHTML
-      //   //     );
-      //   //   }
-      //   // }
-      // } else {
-      //   target.textContent = 'edit';
-      //   // input.setAttribute('readonly', 'readonly');
-      // }
+      if (target.textContent.toLowerCase().trim() === action) {
+        inputTag.removeAttribute('readonly');
+        inputTag.focus();
+        inputTag.selectionStart = inputTag.value.length;
+        target.textContent = 'save';
+        target.addEventListener('click', changeName);
+
+        function changeName() {
+          inputTag.setAttribute('readonly', 'readonly');
+          target.textContent = 'edit';
+          itemObj.text = inputTag.value;
+          itemsCollection.splice(itemInd, 1, itemObj);
+          saveToLocalStorage();
+        }
+      }
       break;
+
     case 'done':
       const className = 'todo__item-done';
-      item.classList.toggle(className);
-
-      const itemInd = itemsCollection.findIndex(elem => elem.id === id);
-      const itemObj = itemsCollection[itemInd];
+      itemTag.classList.toggle(className);
 
       if (itemObj.done === 'todo__item') {
         itemObj.done = `todo__item ${className}`;
@@ -125,11 +123,11 @@ function onClickAction(event) {
       itemsCollection.splice(itemInd, 1, itemObj);
       saveToLocalStorage();
       break;
+
     case 'delete':
-      const index = itemsCollection.findIndex(item => item.id === id);
-      itemsCollection.splice(index, 1);
-      item.remove();
-      Notify.success(`Task "${input.value}" has been deleted`);
+      itemsCollection.splice(itemInd, 1);
+      itemTag.remove();
+      Notify.success(`Task "${inputTag.value}" has been deleted`);
       saveToLocalStorage();
   }
 }

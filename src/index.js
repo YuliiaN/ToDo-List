@@ -6,15 +6,10 @@ const refs = {
   todoListRef: document.querySelector('.todo__list'),
 };
 const STORAGE_KEY = 'tasks';
-let itemsCollection = [];
+let todosCollection = [];
 
 refs.formRef.addEventListener('submit', addTask);
 refreshPage();
-
-const btnListRef = document.getElementsByClassName('todo__btn-item');
-for (const btnItem of btnListRef) {
-  btnItem.addEventListener('click', onClickAction);
-}
 
 function addTask(event) {
   event.preventDefault();
@@ -22,37 +17,36 @@ function addTask(event) {
   if (!refs.inputRef.value) {
     Notify.failure('You cannot add empty field!');
     return;
-  } else {
-    Notify.success(`Task "${refs.inputRef.value}" has been added`);
-
-    const newTask = {
-      id: Date.now(),
-      text: refs.inputRef.value,
-      done: 'todo__item',
-    };
-
-    itemsCollection.push(newTask);
-    saveToLocalStorage();
-    renderTask(newTask);
-    event.currentTarget.reset();
   }
+
+  Notify.success(`Task "${refs.inputRef.value}" has been added`);
+
+  const newTask = {
+    id: Date.now(),
+    text: refs.inputRef.value,
+    done: 'todo__item',
+  };
+
+  todosCollection.push(newTask);
+  saveToLocalStorage();
+  renderTask(newTask);
+  event.currentTarget.reset();
 }
 
 function refreshPage() {
   if (!localStorage.getItem(STORAGE_KEY)) {
     return;
-  } else {
-    itemsCollection = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    itemsCollection.forEach(task => renderTask(task));
   }
+  todosCollection = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  todosCollection.forEach(todo => renderTask(todo));
 }
 
 function saveToLocalStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(itemsCollection));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todosCollection));
 }
 
 function renderTask(task) {
-  const item = `<li id="${task.id}" class="${task.done}">
+  const todo = `<li id="${task.id}" class="${task.done}">
               <input value="${task.text}" class="todo__input" readonly></input>
               <div class="todo__btn-list">
                 <button
@@ -79,7 +73,10 @@ function renderTask(task) {
               </div>
             </li>
       `;
-  refs.todoListRef.insertAdjacentHTML('beforeend', item);
+  refs.todoListRef.insertAdjacentHTML('beforeend', todo);
+
+  const btnListRef = document.querySelectorAll('.todo__btn-item');
+  btnListRef.forEach(button => button.addEventListener('click', onClickAction));
 }
 
 function onClickAction(event) {
@@ -88,8 +85,8 @@ function onClickAction(event) {
   const itemTag = target.closest('li');
   const itemID = +itemTag.id;
   const inputTag = itemTag.children[0];
-  const itemInd = itemsCollection.findIndex(elem => elem.id === itemID);
-  const itemObj = itemsCollection[itemInd];
+  const itemInd = todosCollection.findIndex(elem => elem.id === itemID);
+  const itemObj = todosCollection[itemInd];
 
   switch (action) {
     case 'edit':
@@ -106,7 +103,7 @@ function onClickAction(event) {
           inputTag.setAttribute('readonly', 'readonly');
           target.textContent = 'edit';
           itemObj.text = inputTag.value;
-          itemsCollection.splice(itemInd, 1, itemObj);
+          todosCollection.splice(itemInd, 1, itemObj);
           Notify.info(
             `Task "${prev_value}" has been changed to "${inputTag.value}"`
           );
@@ -126,12 +123,12 @@ function onClickAction(event) {
         itemObj.done = 'todo__item';
       }
 
-      itemsCollection.splice(itemInd, 1, itemObj);
+      todosCollection.splice(itemInd, 1, itemObj);
       saveToLocalStorage();
       break;
 
     case 'delete':
-      itemsCollection.splice(itemInd, 1);
+      todosCollection.splice(itemInd, 1);
       itemTag.remove();
       Notify.success(`Task "${inputTag.value}" has been deleted`);
       saveToLocalStorage();

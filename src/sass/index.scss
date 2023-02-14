@@ -67,6 +67,11 @@ nav {
 
 // ToDo input
 
+.todo__link {
+  color: $accent;
+  text-decoration: none;
+}
+
 .todo__title {
   margin-bottom: 20px;
   font-family: 'Dancing Script', cursive;
